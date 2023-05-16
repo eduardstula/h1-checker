@@ -7,7 +7,8 @@ This is a console application written in PHP 8.2 using the Symfony Console compo
 ## Installation
 
 - Clone the repository or download the source code.
-- Navigate to the project directory.   Run the following command to install the dependencies using Composer:
+- Navigate to the project directory.
+- Run the following command to install the dependencies using Composer:
 
 
     composer install  
