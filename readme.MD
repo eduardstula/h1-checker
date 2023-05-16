@@ -41,7 +41,9 @@ Note: The output file "h1.txt" is automatically created and overwritten each tim
 ## Requirements  
 - PHP 8.0 or higher  
 - Composer 
-- This project is licensed under the MIT License.
+
+## License
+This project is licensed under the MIT License.
 
 ## Credits  
-This application was developed by Eduard Štůla (info@eduardstula.cz).
+This application was developed by Eduard Štůla.
