@@ -2,6 +2,8 @@
 # Console Application for Finding URLs with Multiple H1 Headings
 This is a console application written in PHP 8.2 using the Symfony Console component. The application takes a URL address with a sitemap.xml file as input and outputs the URLs where more than one top-level H1 heading is found.
 
+![](assets/console.png)
+
 ## Installation
 
 - Clone the repository or download the source code.
