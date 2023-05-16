@@ -1,0 +1,10 @@
+{
+    "require": {
+        "symfony/console": "^6.2"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
+    }
+}

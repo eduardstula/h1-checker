@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+$application = new Application();
+
+$application->register('h1')
+    ->addArgument('sitemap', InputArgument::REQUIRED)
+    ->setCode(function (InputInterface $input, OutputInterface $output): int {
+
+        $sitemapUrl = $input->getArgument('sitemap');
+        $outputFile = __DIR__ . "/h1.txt";
+        unlink($outputFile);
+
+        $sitemap = file_get_contents($sitemapUrl);
+        $xml = simplexml_load_string($sitemap);
+        $pages = [];
+        foreach ($xml->url as $url) {
+            if (filter_var((string)$url->loc, FILTER_VALIDATE_URL) === false) {
+                continue;
+            }
+            $pages[] = (string)$url->loc;
+        }
+
+        $progressBar = new ProgressBar($output, count($pages));
+        $progressBar->start();
+
+        foreach ($pages as $page) {
+            $html = file_get_contents($page);
+            $h1s = [];
+            $pos = 0;
+            while (($pos = strpos($html, "<h1", $pos)) !== false) {
+                $h1s[] = $pos;
+                $pos++;
+            }
+
+            if (count($h1s) > 1) {
+                file_put_contents($outputFile, $page . "\n", FILE_APPEND);
+            }
+            $progressBar->advance();
+        }
+        $progressBar->finish();
+
+        $output->writeln('');
+        $output->writeln('');
+        $output->writeln('Scanned pages: ' . count($pages));
+        $output->writeln('More than one H1: ' . count(file($outputFile)));
+        $output->writeln('');
+        $output->writeln('Output file with URLs: ' . $outputFile);
+        $output->writeln('');
+        $output->writeln('');
+
+
+        return Command::SUCCESS;
+    });
+
+$application->run();
