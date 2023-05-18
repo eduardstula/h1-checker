@@ -12,6 +12,8 @@
   "require": {
     "php": ">= 8.0",
     "ext-simplexml": "*",
+    "ext-libxml": "*",
+    "ext-dom": "*",
     "symfony/console": "^6.2"
   },
   "config": {
