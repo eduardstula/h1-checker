@@ -35,14 +35,32 @@ $application->register('h1')
 
         foreach ($pages as $page) {
             $html = file_get_contents($page);
-            $h1s = [];
-            $pos = 0;
-            while (($pos = strpos($html, "<h1", $pos)) !== false) {
-                $h1s[] = $pos;
-                $pos++;
+            $dom = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHTML($html);
+            libxml_clear_errors();
+
+            $h1s = $dom->getElementsByTagName('h1');
+            $validH1Count = 0;
+
+            foreach ($h1s as $h1) {
+
+                $parentNode = $h1->parentNode;
+                $isInsideComment = false;
+                while ($parentNode != null) {
+                    if ($parentNode instanceof DOMComment) {
+                        $isInsideComment = true;
+                        break;
+                    }
+                    $parentNode = $parentNode->parentNode;
+                }
+
+                if (!$isInsideComment) {
+                    $validH1Count++;
+                }
             }
 
-            if (count($h1s) > 1) {
+            if ($validH1Count > 1) {
                 file_put_contents($outputFile, $page . "\n", FILE_APPEND);
             }
             $progressBar->advance();
